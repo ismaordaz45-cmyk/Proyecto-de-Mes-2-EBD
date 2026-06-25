@@ -4,166 +4,279 @@
     <meta charset="UTF-8">
     <title>Predictor de Precio de Airbnb - NYC</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600&display=swap');
+
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1e40af;
+            --accent: #f59e0b;
+            --success: #10b981;
+            --gray: #64748b;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background-color: #f4f6f8;
+            font-family: 'Inter', system_ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%);
             margin: 0;
-            padding: 0;
-            color: #222;
+            padding: 20px 0;
+            color: #1e2937;
+            min-height: 100vh;
         }
+
         .container {
-            max-width: 640px;
-            margin: 40px auto;
-            background: #fff;
-            border-radius: 10px;
-            padding: 32px 40px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            max-width: 680px;
+            margin: 20px auto;
+            background: #ffffff;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(37, 99, 235, 0.12),
+                        0 4px 12px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e2e8f0;
         }
-        h1 {
-            color: #c0392b;
-            margin-bottom: 4px;
+
+        .header {
+            background: linear-gradient(90deg, var(--primary), #3b82f6);
+            color: white;
+            padding: 28px 40px;
+            position: relative;
         }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #f59e0b, #eab308);
+        }
+
+        .header h1 {
+            margin: 0 0 8px 0;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.1rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+        }
+
+        .student-info {
+            margin-top: 12px;
+            font-size: 1.05rem;
+            opacity: 0.95;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
         .subtitle {
-            color: #555;
-            margin-bottom: 20px;
+            color: #e0f2fe;
+            margin: 0;
+            font-size: 1.05rem;
+            font-weight: 400;
         }
+
+        .main-content {
+            padding: 40px;
+        }
+
         .instructions {
-            background: #fdf2e9;
-            border-left: 4px solid #e67e22;
-            padding: 12px 16px;
-            border-radius: 6px;
-            margin-bottom: 24px;
-            font-size: 0.95em;
+            background: linear-gradient(135deg, #fefce8, #fef9c3);
+            border-left: 5px solid var(--accent);
+            padding: 18px 22px;
+            border-radius: 12px;
+            margin-bottom: 32px;
+            font-size: 0.98em;
+            line-height: 1.5;
         }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
         label {
             display: block;
             font-weight: 600;
-            margin-top: 14px;
-            margin-bottom: 4px;
+            margin-bottom: 6px;
+            color: #1e2937;
+            font-size: 1.02rem;
         }
+
         .hint {
-            font-size: 0.82em;
-            color: #777;
+            font-size: 0.85rem;
+            color: #64748b;
+            margin-bottom: 8px;
             font-weight: 400;
-            margin-bottom: 4px;
         }
+
         select, input[type="text"], input[type="number"] {
             width: 100%;
-            padding: 9px 10px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            box-sizing: border-box;
-            font-size: 1em;
+            padding: 14px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1.02rem;
+            transition: all 0.3s ease;
+            background: #fff;
         }
+
+        select:focus, input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
+        }
+
         button {
-            margin-top: 24px;
-            background-color: #c0392b;
-            color: #fff;
+            margin-top: 12px;
+            background: linear-gradient(90deg, var(--primary), #3b82f6);
+            color: white;
             border: none;
-            padding: 12px 24px;
-            border-radius: 6px;
-            font-size: 1.05em;
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
             cursor: pointer;
             width: 100%;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
         }
+
         button:hover {
-            background-color: #a93226;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.35);
+            background: linear-gradient(90deg, #1e40af, var(--primary));
         }
+
         .result {
-            margin-top: 26px;
-            background: #eafaf1;
-            border-left: 4px solid #27ae60;
-            padding: 16px 20px;
-            border-radius: 6px;
-            font-size: 1.15em;
-        }
-        .error {
-            margin-top: 26px;
-            background: #fdecea;
-            border-left: 4px solid #e74c3c;
-            padding: 14px 20px;
-            border-radius: 6px;
-            color: #c0392b;
-        }
-        footer {
-            margin-top: 30px;
-            font-size: 0.78em;
-            color: #999;
+            margin-top: 32px;
+            background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+            border: 2px solid #10b981;
+            border-radius: 16px;
+            padding: 24px;
             text-align: center;
+            font-size: 1.35rem;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.15);
+        }
+
+        .error {
+            margin-top: 32px;
+            background: #fef2f2;
+            border: 2px solid #ef4444;
+            border-radius: 16px;
+            padding: 20px;
+            color: #b91c1c;
+        }
+
+        footer {
+            background: #f8fafc;
+            padding: 22px 40px;
+            text-align: center;
+            font-size: 0.85rem;
+            color: #64748b;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .emoji {
+            font-size: 1.4rem;
+            margin-right: 8px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🏙️ Predictor de Precio de Airbnb - NYC</h1>
-        <p class="subtitle">Modelo de regresión (Random Forest) entrenado sobre el dataset AB_NYC_2019.</p>
-
-        <div class="instructions">
-            <strong>Propósito:</strong> estimar el precio por noche (en USD) de un alojamiento Airbnb en
-            Nueva York a partir de sus características reales (sin necesidad de conocer transformaciones internas).<br>
-            <strong>Instrucciones:</strong> completa los 6 campos con los valores reales del alojamiento y presiona
-            "Predecir precio".
+        <!-- Header mejorado -->
+        <div class="header">
+            <h1>🏙️ Predictor de Precio de Airbnb - NYC</h1>
+            <p class="subtitle">Modelo de regresión (Random Forest)</p>
+            
+            <div class="student-info">
+                <strong>Ismael Hernández Ordaz 9B</strong> • 
+                Extracción de Base de Datos • Proyecto Mes 2
+            </div>
         </div>
 
-        <form method="POST" action="/predict">
-            <label for="neighbourhood_group">Distrito (Borough)</label>
-            <div class="hint">Uno de los 5 distritos de Nueva York</div>
-            <select name="neighbourhood_group" id="neighbourhood_group" required>
-                <option value="" disabled {% if not form_values.get('neighbourhood_group') %}selected{% endif %}>Selecciona un distrito</option>
-                {% for ng in ng_options %}
-                <option value="{{ ng }}" {% if form_values.get('neighbourhood_group') == ng %}selected{% endif %}>{{ ng }}</option>
-                {% endfor %}
-            </select>
+        <div class="main-content">
+            <div class="instructions">
+                <strong>Propósito:</strong> estimar el precio por noche (en USD) de un alojamiento Airbnb en Nueva York a partir de sus características reales.<br><br>
+                <strong>Instrucciones:</strong> completa los 6 campos con los valores reales del alojamiento y presiona <strong>"Predecir precio"</strong>.
+            </div>
 
-            <label for="neighbourhood">Barrio (Neighbourhood)</label>
-            <div class="hint">Nombre real del barrio, ej. Williamsburg, Harlem, Astoria</div>
-            <input type="text" name="neighbourhood" id="neighbourhood"
-                   value="{{ form_values.get('neighbourhood', '') }}"
-                   placeholder="Ej. Williamsburg" required>
+            <form method="POST" action="/predict">
+                <div class="form-group">
+                    <label for="neighbourhood_group">Distrito (Borough)</label>
+                    <div class="hint">Uno de los 5 distritos de Nueva York</div>
+                    <select name="neighbourhood_group" id="neighbourhood_group" required>
+                        <option value="" disabled {% if not form_values.get('neighbourhood_group') %}selected{% endif %}>Selecciona un distrito</option>
+                        {% for ng in ng_options %}
+                        <option value="{{ ng }}" {% if form_values.get('neighbourhood_group') == ng %}selected{% endif %}>{{ ng }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
 
-            <label for="room_type">Tipo de habitación</label>
-            <div class="hint">Tipo de alojamiento ofrecido</div>
-            <select name="room_type" id="room_type" required>
-                <option value="" disabled {% if not form_values.get('room_type') %}selected{% endif %}>Selecciona un tipo</option>
-                {% for rt in rt_options %}
-                <option value="{{ rt }}" {% if form_values.get('room_type') == rt %}selected{% endif %}>{{ rt }}</option>
-                {% endfor %}
-            </select>
+                <div class="form-group">
+                    <label for="neighbourhood">Barrio (Neighbourhood)</label>
+                    <div class="hint">Nombre real del barrio, ej. Williamsburg, Harlem, Astoria</div>
+                    <input type="text" name="neighbourhood" id="neighbourhood"
+                           value="{{ form_values.get('neighbourhood', '') }}"
+                           placeholder="Ej. Williamsburg" required>
+                </div>
 
-            <label for="latitude">Latitud</label>
-            <div class="hint">Coordenada de latitud del alojamiento (rango NYC: 40.4 a 41.0)</div>
-            <input type="text" name="latitude" id="latitude"
-                   value="{{ form_values.get('latitude', '') }}"
-                   placeholder="Ej. 40.7128" required>
+                <div class="form-group">
+                    <label for="room_type">Tipo de habitación</label>
+                    <div class="hint">Tipo de alojamiento ofrecido</div>
+                    <select name="room_type" id="room_type" required>
+                        <option value="" disabled {% if not form_values.get('room_type') %}selected{% endif %}>Selecciona un tipo</option>
+                        {% for rt in rt_options %}
+                        <option value="{{ rt }}" {% if form_values.get('room_type') == rt %}selected{% endif %}>{{ rt }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
 
-            <label for="longitude">Longitud</label>
-            <div class="hint">Coordenada de longitud del alojamiento (rango NYC: -74.3 a -73.6)</div>
-            <input type="text" name="longitude" id="longitude"
-                   value="{{ form_values.get('longitude', '') }}"
-                   placeholder="Ej. -73.9860" required>
+                <div class="form-group">
+                    <label for="latitude">Latitud</label>
+                    <div class="hint">Coordenada de latitud del alojamiento (rango NYC: 40.4 a 41.0)</div>
+                    <input type="text" name="latitude" id="latitude"
+                           value="{{ form_values.get('latitude', '') }}"
+                           placeholder="Ej. 40.7128" required>
+                </div>
 
-            <label for="availability_365">Disponibilidad anual (días)</label>
-            <div class="hint">Número de días disponibles en el año (0 a 365)</div>
-            <input type="number" name="availability_365" id="availability_365" min="0" max="365"
-                   value="{{ form_values.get('availability_365', '') }}"
-                   placeholder="Ej. 200" required>
+                <div class="form-group">
+                    <label for="longitude">Longitud</label>
+                    <div class="hint">Coordenada de longitud del alojamiento (rango NYC: -74.3 a -73.6)</div>
+                    <input type="text" name="longitude" id="longitude"
+                           value="{{ form_values.get('longitude', '') }}"
+                           placeholder="Ej. -73.9860" required>
+                </div>
 
-            <button type="submit">Predecir precio</button>
-        </form>
+                <div class="form-group">
+                    <label for="availability_365">Disponibilidad anual (días)</label>
+                    <div class="hint">Número de días disponibles en el año (0 a 365)</div>
+                    <input type="number" name="availability_365" id="availability_365" min="0" max="365"
+                           value="{{ form_values.get('availability_365', '') }}"
+                           placeholder="Ej. 200" required>
+                </div>
 
-        {% if prediction is not none %}
-        <div class="result">
-            💲 <strong>Precio estimado:</strong> ${{ prediction }} USD por noche
+                <button type="submit">🚀 Predecir precio</button>
+            </form>
+
+            {% if prediction is not none %}
+            <div class="result">
+                💲 <strong>Precio estimado:</strong> <span style="font-size:1.5rem; color:#10b981;">${{ prediction }}</span> <strong>USD</strong> por noche
+            </div>
+            {% endif %}
+
+            {% if error %}
+            <div class="error">
+                ⚠️ <strong>Error:</strong> {{ error }}
+            </div>
+            {% endif %}
         </div>
-        {% endif %}
 
-        {% if error %}
-        <div class="error">
-            ⚠️ <strong>Error:</strong> {{ error }}
-        </div>
-        {% endif %}
-
-        <footer>Modelo de regresión - Dataset AB_NYC_2019 - Despliegue con Flask + Render</footer>
+        <footer>
+            Modelo de regresión • Dataset AB_NYC_2019 • Despliegue con Flask + Render
+        </footer>
     </div>
 </body>
 </html>
