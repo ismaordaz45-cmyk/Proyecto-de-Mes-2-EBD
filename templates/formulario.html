@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Predictor de Precio de Airbnb - NYC</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 0;
+            color: #222;
+        }
+        .container {
+            max-width: 640px;
+            margin: 40px auto;
+            background: #fff;
+            border-radius: 10px;
+            padding: 32px 40px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+        h1 {
+            color: #c0392b;
+            margin-bottom: 4px;
+        }
+        .subtitle {
+            color: #555;
+            margin-bottom: 20px;
+        }
+        .instructions {
+            background: #fdf2e9;
+            border-left: 4px solid #e67e22;
+            padding: 12px 16px;
+            border-radius: 6px;
+            margin-bottom: 24px;
+            font-size: 0.95em;
+        }
+        label {
+            display: block;
+            font-weight: 600;
+            margin-top: 14px;
+            margin-bottom: 4px;
+        }
+        .hint {
+            font-size: 0.82em;
+            color: #777;
+            font-weight: 400;
+            margin-bottom: 4px;
+        }
+        select, input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 9px 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 1em;
+        }
+        button {
+            margin-top: 24px;
+            background-color: #c0392b;
+            color: #fff;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 1.05em;
+            cursor: pointer;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #a93226;
+        }
+        .result {
+            margin-top: 26px;
+            background: #eafaf1;
+            border-left: 4px solid #27ae60;
+            padding: 16px 20px;
+            border-radius: 6px;
+            font-size: 1.15em;
+        }
+        .error {
+            margin-top: 26px;
+            background: #fdecea;
+            border-left: 4px solid #e74c3c;
+            padding: 14px 20px;
+            border-radius: 6px;
+            color: #c0392b;
+        }
+        footer {
+            margin-top: 30px;
+            font-size: 0.78em;
+            color: #999;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏙️ Predictor de Precio de Airbnb - NYC</h1>
+        <p class="subtitle">Modelo de regresión (Random Forest) entrenado sobre el dataset AB_NYC_2019.</p>
+
+        <div class="instructions">
+            <strong>Propósito:</strong> estimar el precio por noche (en USD) de un alojamiento Airbnb en
+            Nueva York a partir de sus características reales (sin necesidad de conocer transformaciones internas).<br>
+            <strong>Instrucciones:</strong> completa los 6 campos con los valores reales del alojamiento y presiona
+            "Predecir precio".
+        </div>
+
+        <form method="POST" action="/predict">
+            <label for="neighbourhood_group">Distrito (Borough)</label>
+            <div class="hint">Uno de los 5 distritos de Nueva York</div>
+            <select name="neighbourhood_group" id="neighbourhood_group" required>
+                <option value="" disabled {% if not form_values.get('neighbourhood_group') %}selected{% endif %}>Selecciona un distrito</option>
+                {% for ng in ng_options %}
+                <option value="{{ ng }}" {% if form_values.get('neighbourhood_group') == ng %}selected{% endif %}>{{ ng }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="neighbourhood">Barrio (Neighbourhood)</label>
+            <div class="hint">Nombre real del barrio, ej. Williamsburg, Harlem, Astoria</div>
+            <input type="text" name="neighbourhood" id="neighbourhood"
+                   value="{{ form_values.get('neighbourhood', '') }}"
+                   placeholder="Ej. Williamsburg" required>
+
+            <label for="room_type">Tipo de habitación</label>
+            <div class="hint">Tipo de alojamiento ofrecido</div>
+            <select name="room_type" id="room_type" required>
+                <option value="" disabled {% if not form_values.get('room_type') %}selected{% endif %}>Selecciona un tipo</option>
+                {% for rt in rt_options %}
+                <option value="{{ rt }}" {% if form_values.get('room_type') == rt %}selected{% endif %}>{{ rt }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="latitude">Latitud</label>
+            <div class="hint">Coordenada de latitud del alojamiento (rango NYC: 40.4 a 41.0)</div>
+            <input type="text" name="latitude" id="latitude"
+                   value="{{ form_values.get('latitude', '') }}"
+                   placeholder="Ej. 40.7128" required>
+
+            <label for="longitude">Longitud</label>
+            <div class="hint">Coordenada de longitud del alojamiento (rango NYC: -74.3 a -73.6)</div>
+            <input type="text" name="longitude" id="longitude"
+                   value="{{ form_values.get('longitude', '') }}"
+                   placeholder="Ej. -73.9860" required>
+
+            <label for="availability_365">Disponibilidad anual (días)</label>
+            <div class="hint">Número de días disponibles en el año (0 a 365)</div>
+            <input type="number" name="availability_365" id="availability_365" min="0" max="365"
+                   value="{{ form_values.get('availability_365', '') }}"
+                   placeholder="Ej. 200" required>
+
+            <button type="submit">Predecir precio</button>
+        </form>
+
+        {% if prediction is not none %}
+        <div class="result">
+            💲 <strong>Precio estimado:</strong> ${{ prediction }} USD por noche
+        </div>
+        {% endif %}
+
+        {% if error %}
+        <div class="error">
+            ⚠️ <strong>Error:</strong> {{ error }}
+        </div>
+        {% endif %}
+
+        <footer>Modelo de regresión - Dataset AB_NYC_2019 - Despliegue con Flask + Render</footer>
+    </div>
+</body>
+</html>

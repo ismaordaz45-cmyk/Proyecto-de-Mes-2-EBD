@@ -1,0 +1,23 @@
+{
+  "input_features": [
+    "room_type",
+    "neighbourhood",
+    "neighbourhood_group",
+    "latitude",
+    "longitude",
+    "availability_365"
+  ],
+  "num_cols": [
+    "latitude",
+    "longitude",
+    "availability_365"
+  ],
+  "cat_cols": [
+    "room_type",
+    "neighbourhood",
+    "neighbourhood_group"
+  ],
+  "escenario": "Caracteristicas (Escenario 1)",
+  "modelo": "Random Forest (DEMO - muestra sintetica)",
+  "price_filter": "price <= 500 USD"
+}

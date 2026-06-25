@@ -1,0 +1,20 @@
+# Ignore virtual environment
+myenv/
+venv/
+env/
+
+# Ignore Python cache files
+__pycache__/
+*.pyc
+*.pyo
+
+# Ignore MacOS specific file
+.DS_Store
+
+# Ignore environment variables files
+.env
+.venv
+
+# Datos de entrenamiento (pesados, no necesarios en producción)
+AB_NYC_2019.csv
+AB_NYC_2019_sample.csv
